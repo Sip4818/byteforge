@@ -1,5 +1,6 @@
+use byteforge::pretokenization;
 fn main() {
-    // pretokenization("Hello world")
+    println!("{:?}",pretokenization("Hello world"));
 
     
 
