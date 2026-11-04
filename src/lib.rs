@@ -12,7 +12,7 @@ pub fn pretokenization(corpus: &str) -> Vec<String>{
                 chunks.push(curr_chunk.clone());
                 curr_chunk.clear();
             }
-            // TODO:handling non alpha
+            chunks.push(ch.to_string().clone())
         }
     
     }
@@ -30,10 +30,23 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_pretokenization() {
-        let corpus = "Hello world";
-        // TODO: Update the v as per the implementation of handling non alpha in the function
-        let v = Vec::from(["Hello", "world"]);
-        assert_eq!(pretokenization(&corpus), v);
+    fn test_pretokenization_with_string() {
+        let corpus = "Hello, world! How are you?";
+
+        let expected = Vec::from([
+            "Hello", ",", " ", "world", "!", " ",
+            "How", " ", "are", " ", "you", "?"
+        ]);
+
+        assert_eq!(pretokenization(corpus), expected);
+    }
+
+    #[test]
+    fn test_pretokenization_with_empty_string() {
+        let corpus = "";
+
+        let expected: Vec<String> = Vec::new();
+
+        assert_eq!(pretokenization(corpus), expected);
     }
 }
