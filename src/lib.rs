@@ -23,6 +23,15 @@ pub fn pretokenization(corpus: &str) -> Vec<String>{
     return chunks;
 }
 
+pub fn str_chunk_to_bytes(str_chunk: Vec<String>) -> Vec<Vec<u8>>{
+    let mut bytes_chunk: Vec<Vec<u8>> = Vec::new();
+    for chunk in str_chunk{
+        bytes_chunk.push(chunk.clone().into_bytes());
+        
+    }
+    bytes_chunk
+}
+
 
 
 #[cfg(test)]
@@ -48,5 +57,28 @@ mod tests {
         let expected: Vec<String> = Vec::new();
 
         assert_eq!(pretokenization(corpus), expected);
+    }
+    #[test]
+    fn test_str_chunk_to_bytes(){
+        let corpus_chunk = Vec::from([
+            "Hello", ",", " ", "world", "!", " ",
+            "How", " ", "are", " ", "you", "?"
+        ]);
+
+        let expected = vec![
+            vec![72, 101, 108, 108, 111],
+            vec![44],
+            vec![32],
+            vec![119, 111, 114, 108, 100],
+            vec![33],
+            vec![32],
+            vec![72, 111, 119],
+            vec![32],
+            vec![97, 114, 101],
+            vec![32],
+            vec![121, 111, 117],
+            vec![63],
+        ];
+        assert_eq!(str_chunk_to_bytes(corpus), expected);
     }
 }
