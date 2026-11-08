@@ -59,6 +59,19 @@
 
 
     }
+    pub fn get_most_frequent_pair(pair_frequency: HashMap<(u8, u8), usize>) -> Option<((u8,u8), usize)>{
+        let mut most_freq_pair: Option<((u8, u8), usize)> = None;
+        let mut max_freq: usize = 0;
+
+        for (pair, freq) in &pair_frequency {
+            if *freq > max_freq{
+                max_freq = *freq;
+                most_freq_pair = Some((*pair, *freq));
+            }  
+        }
+        return most_freq_pair 
+
+    }
 
 
 
@@ -165,4 +178,26 @@
             ]);
             assert_eq!(count_pairs(byte_chunks), expected)
         }
+    #[test]
+    fn test_count_most_frequent_pair() {
+        let pair_frequency = HashMap::from([
+            ((72, 101), 5),
+            ((108, 108), 12),
+            ((101, 108), 8),
+            ((119, 111), 3),
+        ]);
+
+        let expected = Some(((108, 108), 12));
+
+        assert_eq!(
+            get_most_frequent_pair(pair_frequency),
+            expected
+        );
+    }
+    #[test]
+    fn test_count_most_frequent_pair_empty() {
+        let pair_frequency: HashMap<(u8, u8), usize> = HashMap::new();
+
+        assert_eq!(get_most_frequent_pair(pair_frequency), None);
+    }
     }
