@@ -24,18 +24,22 @@
         return chunks;
     }
 
-    pub fn str_chunk_to_bytes(str_chunk: Vec<String>) -> Vec<Vec<u8>>{
-        let mut bytes_chunks: Vec<Vec<u8>> = Vec::new();
+    pub fn str_chunk_to_bytes(str_chunk: Vec<String>) -> Vec<Vec<u32>>{
+        let mut bytes_chunks: Vec<Vec<u32>> = Vec::new();
         for chunk in str_chunk{
-            bytes_chunks.push(chunk.clone().into_bytes());
-            
+            let bytes: Vec<u32> = chunk
+                                .into_bytes()
+                                .into_iter()
+                                .map(|b| b as u32)
+                                .collect();
+            bytes_chunks.push(bytes);
         }
         bytes_chunks
     }
-    pub fn create_pairs_from_chunk(chunk: Vec<u8>) -> Vec<(u8, u8)>{
+    pub fn create_pairs_from_chunk(chunk: Vec<u32>) -> Vec<(u32, u32)>{
         let n = chunk.len();
 
-        let mut pairs: Vec<(u8, u8)> = Vec::new();
+        let mut pairs: Vec<(u32, u32)> = Vec::new();
             if n == 0{
             return pairs;
         }
@@ -47,8 +51,8 @@
     }
 
 
-    pub fn count_pairs(bytes_chunks: Vec<Vec<u8>>) -> HashMap<(u8, u8), usize>{
-        let mut pair_frequency : HashMap<(u8, u8), usize> = HashMap::new();
+    pub fn count_pairs(bytes_chunks: Vec<Vec<u32>>) -> HashMap<(u32, u32), usize>{
+        let mut pair_frequency : HashMap<(u32, u32), usize> = HashMap::new();
         for chunk in bytes_chunks{
             let pairs = create_pairs_from_chunk(chunk);
             for pair in pairs{
@@ -59,8 +63,8 @@
 
 
     }
-    pub fn get_most_frequent_pair(pair_frequency: HashMap<(u8, u8), usize>) -> Option<((u8,u8), usize)>{
-        let mut most_freq_pair: Option<((u8, u8), usize)> = None;
+    pub fn get_most_frequent_pair(pair_frequency: HashMap<(u32, u32), usize>) -> Option<((u32,u32), usize)>{
+        let mut most_freq_pair: Option<((u32, u32), usize)> = None;
         let mut max_freq: usize = 0;
 
         for (pair, freq) in &pair_frequency {
@@ -72,6 +76,25 @@
         return most_freq_pair 
 
     }
+
+    pub fn merge_pair(freq_pair: (u32, u32), mut bytes_chunks: Vec<Vec<u32>>, new_token_id: u32) -> Vec<Vec<u32>>{
+        for chunk in &mut bytes_chunks{
+            let mut i = 0;
+            while i + 1 < chunk.len(){
+                if chunk[i] == freq_pair.0 && chunk[i + 1] == freq_pair.1{
+                    chunk.remove(i);
+                    chunk.remove(i);
+                    chunk.insert(i, new_token_id);
+                }
+                else{
+                    i += 1
+                }
+                
+            }
+        }
+        bytes_chunks
+    }
+
 
 
 
@@ -133,14 +156,14 @@
         #[test]
         fn test_create_pairs_from_chunk_single_byte() {
             let byte_chunk = vec![72];
-            let expected: Vec<(u8, u8)> = vec![];
+            let expected: Vec<(u32, u32)> = vec![];
 
             assert_eq!(create_pairs_from_chunk(byte_chunk), expected);
         }
         #[test]
         fn test_create_pairs_from_chunk_empty() {
-            let byte_chunk: Vec<u8> = vec![];
-            let expected: Vec<(u8, u8)> = vec![];
+            let byte_chunk: Vec<u32> = vec![];
+            let expected: Vec<(u32, u32)> = vec![];
 
             assert_eq!(create_pairs_from_chunk(byte_chunk), expected);
         }
@@ -196,8 +219,50 @@
     }
     #[test]
     fn test_count_most_frequent_pair_empty() {
-        let pair_frequency: HashMap<(u8, u8), usize> = HashMap::new();
+        let pair_frequency: HashMap<(u32, u32), usize> = HashMap::new();
 
         assert_eq!(get_most_frequent_pair(pair_frequency), None);
     }
+    #[test]
+    fn test_merge_pair() {
+        let new_token_id = 256;
+
+        let byte_chunks = vec![
+            vec![72, 101, 108, 108, 111],
+            vec![44],
+            vec![32],
+            vec![119, 111, 114, 108, 100],
+            vec![33],
+            vec![32],
+            vec![72, 111, 119],
+            vec![32],
+            vec![97, 114, 101],
+            vec![32],
+            vec![121, 111, 117],
+            vec![63],
+        ];
+
+        let freq_pair = (108, 108);
+
+        let expected = vec![
+            vec![72, 101, 256, 111],
+            vec![44],
+            vec![32],
+            vec![119, 111, 114, 108, 100],
+            vec![33],
+            vec![32],
+            vec![72, 111, 119],
+            vec![32],
+            vec![97, 114, 101],
+            vec![32],
+            vec![121, 111, 117],
+            vec![63],
+        ];
+
+        assert_eq!(
+            merge_pair(freq_pair, byte_chunks, new_token_id),
+            expected
+        );
     }
+
+}
