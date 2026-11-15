@@ -5,7 +5,7 @@ pub fn pretokenization(corpus: &str) -> Vec<String> {
         if ch.is_alphabetic() {
             curr_chunk.push(ch);
         } else {
-            if curr_chunk.len() != 0 {
+            if !curr_chunk.is_empty() {
                 chunks.push(curr_chunk.clone());
                 curr_chunk.clear();
             }
@@ -16,7 +16,7 @@ pub fn pretokenization(corpus: &str) -> Vec<String> {
         chunks.push(curr_chunk.clone());
         curr_chunk.clear()
     }
-    return chunks;
+    chunks
 }
 
 pub fn chunks_to_byte_ids(str_chunk: Vec<String>) -> Vec<Vec<u32>> {

@@ -37,7 +37,7 @@ pub fn get_most_frequent_pair(
             most_freq_pair = Some((*pair, *freq));
         }
     }
-    return most_freq_pair;
+    most_freq_pair
 }
 
 pub fn initialize_vocab() -> Vec<Vec<u8>> {

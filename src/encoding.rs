@@ -29,7 +29,7 @@ pub fn encode(text: &str, merge_rules: &[((u32, u32), u32)]) -> Vec<u32> {
             }
         }
     }
-    return merge_chunks(byte_chunks);
+    merge_chunks(byte_chunks)
 }
 
 #[cfg(test)]

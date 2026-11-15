@@ -1,12 +1,10 @@
-pub fn decode(merged_chunk: &Vec<u32>, vocab: &Vec<Vec<u8>>) -> String {
+pub fn decode(merged_chunk: &Vec<u32>, vocab: &[Vec<u8>]) -> String {
     let mut original_byte_tokens: Vec<u8> = Vec::new();
 
     for bt in merged_chunk {
         original_byte_tokens.extend(vocab[*bt as usize].clone());
     }
-    let s = String::from_utf8(original_byte_tokens).expect("Invalid UTF-8");
-
-    return s;
+    String::from_utf8(original_byte_tokens).expect("Invalid UTF-8")
 }
 
 #[cfg(test)]
