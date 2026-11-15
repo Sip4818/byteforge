@@ -58,4 +58,8 @@ fn main() {
 
     println!("{:?}", tokens);
     println!("{}", decoded);
+
+    assert_eq!(test_text, decoded);
+
+    println!("Round-trip test passed!");
 }

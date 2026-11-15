@@ -284,7 +284,7 @@ fn test_train_bpe() {
     let corpus = "Hello Hello";
     let max_vocab_size = 260;
 
-    let tokenizer = train_bpe(corpus, max_vocab_size);
+    let tokenizer = train(corpus, max_vocab_size);
 
     // Vocabulary should never exceed target size
     assert!(tokenizer.vocab.len() <= max_vocab_size);
@@ -308,7 +308,7 @@ fn test_train_bpe() {
 }
 #[test]
 fn test_train_bpe_empty_corpus() {
-    let tokenizer = train_bpe("", 300);
+    let tokenizer = train("", 300);
 
     assert_eq!(tokenizer.vocab.len(), 256);
     assert!(tokenizer.merges.is_empty());
@@ -316,7 +316,7 @@ fn test_train_bpe_empty_corpus() {
 
 #[test]
 fn test_train_bpe_target_256() {
-    let tokenizer = train_bpe("Hello", 256);
+    let tokenizer = train("Hello", 256);
 
     assert_eq!(tokenizer.vocab.len(), 256);
     assert!(tokenizer.merges.is_empty());

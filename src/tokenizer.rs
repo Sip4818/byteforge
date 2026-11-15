@@ -24,3 +24,21 @@ impl BpeTokenizer {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_round_trip() {
+        let corpus = "Hello world! Rust is great. Hello Rust!";
+
+        let tokenizer = BpeTokenizer::train(corpus, 300);
+
+        let test_text = "Hello Rust! Testing 123, café 🚀";
+
+        let encoded = tokenizer.encode(test_text);
+        let decoded = tokenizer.decode(&encoded);
+
+        assert_eq!(test_text, decoded);
+    }
+}

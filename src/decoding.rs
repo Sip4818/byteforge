@@ -19,7 +19,7 @@ pub fn decode(merged_chunk: &Vec<u32>, vocab: &Vec<Vec<u8>>) -> String {
 
 #[cfg(test)]
 mod test {
-    use crate::train::{
+    use crate::training::{
     initialize_vocab,
     update_vocabulary,
     };
