@@ -3,6 +3,7 @@ use crate::preprocessing:: {
     pretokenization,
     chunks_to_byte_ids
 };
+use crate::tokenizer::BpeTokenizer;
 
 
 
@@ -67,11 +68,8 @@ pub fn update_vocabulary(mut vocab: Vec<Vec<u8>>, new_pair: (u32,u32))->Vec<Vec<
 
 }
 
-pub struct BpeTokenizer {
-    pub vocab: Vec<Vec<u8>>,
-    pub merges: Vec<((u32, u32), u32)>,
-}
-pub fn train_bpe(corpus: &str, max_vocab_size: usize) -> BpeTokenizer{
+
+pub fn train(corpus: &str, max_vocab_size: usize) -> BpeTokenizer{
     let chunked_corpus: Vec<String> = pretokenization(corpus);
     let mut bytes_chunks: Vec<Vec<u32>> = chunks_to_byte_ids(chunked_corpus);
     let mut vocab = initialize_vocab();
